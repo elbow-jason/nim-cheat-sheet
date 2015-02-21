@@ -24,76 +24,81 @@ A cheat sheet for nim
 Built in:
 
 ```nim
-    char: 'c' '\l'
-    int8 -> int64: 1_024'i8   0xbeef'i16   0o71'i32   0b10'i64
-    float32, float64: 1_000.5e-10'f32
-    string: "a\"b", r"a""b", """a"b"""
-            with \n: new line (platform dependant)
-                 \l: LF (10)  \r: CR (13)
-            var s: string = newString(4)
+char: 'c' '\l'
+int8 -> int64: 1_024'i8   0xbeef'i16   0o71'i32   0b10'i64
+float32, float64: 1_000.5e-10'f32
+string: "a\"b", r"a""b", """a"b"""
+        with \n: new line (platform dependant)
+             \l: LF (10)  \r: CR (13)
+        var s: string = newString(4)
 ```
 
 #### Declarations ####
 
-    type
-      TDirection = enum
-        north, east, south, west
-      TSubrange = range[0..5]
-      TDollar = distinct int
-      TEuro = distinct int
+```nim
+type
+  TDirection = enum
+    north, east, south, west
+  TSubrange = range[0..5]
+  TDollar = distinct int
+  TEuro = distinct int
 
-    type
-      TIntArray = array[0..5, int] # an array that is indexed with 0..5
-      TIntSeq = seq[int]
-    x = [1, 2, 3, 4, 5, 6]  # [] is the array constructor
-    low(x) -> high(x)
-    y = @[1, 2, 3, 4, 5, 6] # the @ turns the array into a sequence
-    0 -> len(y) - 1, init with proc newSeq*[T](s: var seq[T], len: int)
+type
+  TIntArray = array[0..5, int] # an array that is indexed with 0..5
+  TIntSeq = seq[int]
+x = [1, 2, 3, 4, 5, 6]  # [] is the array constructor
+low(x) -> high(x)
+y = @[1, 2, 3, 4, 5, 6] # the @ turns the array into a sequence
+0 -> len(y) - 1, init with proc newSeq*[T](s: var seq[T], len: int)
 
-    type TPerson = tuple[name: string, age: int]
-    var person : TPerson = (name: "Peter", age: 30)
+type TPerson = tuple[name: string, age: int]
+var person : TPerson = (name: "Peter", age: 30)
 
-    type
-      TCallback = proc (x: int) {.cdecl.}
+type
+  TCallback = proc (x: int) {.cdecl.}
+```
 
 #### Objects ####
 
-    type
-      TPerson = object
-          name*: string   # the * means that `name` is accessible from other modules
-          age: int        # no * means that the field is hidden
-      TStudent = object of TPerson # a student is a person
-        id: int                    # with an id field
-      PNode = ref TNode
-      TNode = object
-        case kind: TNodeKind  # the ``kind`` field is the discriminator
-        of nkInt: intVal: int
-        of nkFloat: floatVal: float
-        of nkString: strVal: string
-        of nkAdd, nkSub:
-          leftOp, rightOp: PNode
-        of nkIf:
-          condition, thenPart, elsePart: PNode
+```nim
+type
+  TPerson = object
+      name*: string   # the * means that `name` is accessible from other modules
+      age: int        # no * means that the field is hidden
+  TStudent = object of TPerson # a student is a person
+    id: int                    # with an id field
+  PNode = ref TNode
+  TNode = object
+    case kind: TNodeKind  # the ``kind`` field is the discriminator
+    of nkInt: intVal: int
+    of nkFloat: floatVal: float
+    of nkString: strVal: string
+    of nkAdd, nkSub:
+      leftOp, rightOp: PNode
+    of nkIf:
+      condition, thenPart, elsePart: PNode
 
 `assert(student is TStudent)`
+```
 
 #### Sets ####
 
-      {} # emtpy set
-      {'a'..'z', '0'..'9'} # This constructs a set that contains the
-                           # letters from 'a' to 'z' and the digits
-                           # from '0' to '9'
+```nim
+{} # emtpy set
+{'a'..'z', '0'..'9'} # This constructs a set that contains the
+                   # letters from 'a' to 'z' and the digits
+                   # from '0' to '9'
 
-      A + B	union of two sets
-      A * B	intersection of two sets
-      A - B	difference of two sets (A without B's elements)
-      A == B	set equality
-      A <= B	subset relation (A is subset of B or equal to B)
-      A < B	strong subset relation (A is a real subset of B)
-      e in A	set membership (A contains element e)
-      A -+- B	symmetric set difference (= (A - B) + (B - A))
-      card(A)	the cardinality of A (number of elements in A)
-
+A + B	union of two sets
+A * B	intersection of two sets
+A - B	difference of two sets (A without B's elements)
+A == B	set equality
+A <= B	subset relation (A is subset of B or equal to B)
+A < B	strong subset relation (A is a real subset of B)
+e in A	set membership (A contains element e)
+A -+- B	symmetric set difference (= (A - B) + (B - A))
+card(A)	the cardinality of A (number of elements in A)
+```
 #### Pointers ####
 
 Traced references are declared with the `ref` keyword, untraced references are declared with the `ptr` keyword.
@@ -102,108 +107,119 @@ An address is always an untraced reference.
 
 #### Generics ####
 
-    type
-      TBinaryTree[T] = object      # TBinaryTree is a generic type with
-                                   # with generic param ``T``
-        le, ri: ref TBinaryTree[T] # left and right subtrees; may be nil
-        data: T                    # the data stored in a node
-      PBinaryTree[T] = ref TBinaryTree[T] # a shorthand for notational convenience
+```nim
+type
+  TBinaryTree[T] = object      # TBinaryTree is a generic type with
+                               # with generic param ``T``
+    le, ri: ref TBinaryTree[T] # left and right subtrees; may be nil
+    data: T                    # the data stored in a node
+  PBinaryTree[T] = ref TBinaryTree[T] # a shorthand for notational convenience
 
-    proc newNode[T](data: T): PBinaryTree[T] = # constructor for a node
-      new(result)
-      result.data = data
-
+proc newNode[T](data: T): PBinaryTree[T] = # constructor for a node
+  new(result)
+  result.data = data
+```
 
 ### Procedures ###
 
-    proc myWriteln(f: TFile, a: openarray[string]) =
-      for s in items(a):
-        write(f, s)
-      write(f, "\n")
-    proc callme(x, y: int, s: string = "", c: char, b: bool = false) = ...
+```nim
+proc myWriteln(f: TFile, a: openarray[string]) =
+  for s in items(a):
+    write(f, s)
+  write(f, "\n")
+proc callme(x, y: int, s: string = "", c: char, b: bool = false) = ...
 
-    callme(0, 1, "abc", '\t', true)  # (x=0, y=1, s="abc", c='\t', b=true)
-    callme(y=1, x=0, "abd", '\t')    # (x=0, y=1, s="abd", c='\t', b=false)
-    callme(c='\t', y=1, x=0)         # (x=0, y=1, s="", c='\t', b=false)
-    callme 0, 1, "abc", '\t'
+callme(0, 1, "abc", '\t', true)  # (x=0, y=1, s="abc", c='\t', b=true)
+callme(y=1, x=0, "abd", '\t')    # (x=0, y=1, s="abd", c='\t', b=false)
+callme(c='\t', y=1, x=0)         # (x=0, y=1, s="", c='\t', b=false)
+callme 0, 1, "abc", '\t'
 
-    proc `$` (x: int): string =
-      return intToStr(x)
+proc `$` (x: int): string =
+  return intToStr(x)
+```
 
 ### Control flow ###
 
-    if name == "Andreas":
-      echo("What a nice name!")
-    elif name == "":
-      echo("Don't you have a name?")
-    else:
-      echo("Boring name...")
+```nim
+if name == "Andreas":
+  echo("What a nice name!")
+elif name == "":
+  echo("Don't you have a name?")
+else:
+  echo("Boring name...")
 
-    case readline(stdin)
-    of "delete-everything", "restart-computer":
-      echo("permission denied")
-    of "go-for-a-walk":     echo("please yourself")
-    else:                   echo("unknown command")
+case readline(stdin)
+of "delete-everything", "restart-computer":
+  echo("permission denied")
+of "go-for-a-walk":     echo("please yourself")
+else:                   echo("unknown command")
 
-    when isMainModule:
-      when defined(win32):
-      elif defined(macosx):
-      else:
+when isMainModule:
+  when defined(win32):
+  elif defined(macosx):
+  else:
 
-    var f: TFile
-    if open(f, "numbers.txt"):
-      try:
-        var a = readLine(f)
-        raise newEOS("operating system failed")
-      except EIO:
-        echo("IO error!")
-      except:
-        echo("Unknown exception!")
-      finally:
-        close(f)
+var f: TFile
+if open(f, "numbers.txt"):
+  try:
+    var a = readLine(f)
+    raise newEOS("operating system failed")
+  except EIO:
+    echo("IO error!")
+  except:
+    echo("Unknown exception!")
+  finally:
+    close(f)
 
-    var found = false
-    block myblock:
-      for i in 0..3:
-        for j in 0..3:
-          if a[j][i] == 7:
-            found = true
-            break myblock # leave the block, in this case both for-loops
+var found = false
+block myblock:
+  for i in 0..3:
+    for j in 0..3:
+      if a[j][i] == 7:
+        found = true
+        break myblock # leave the block, in this case both for-loops
 
-    while pw != "12345":
-      echo("Wrong password! Next try: \n")
-      continue
-      pw = readLine(stdin)
+while pw != "12345":
+  echo("Wrong password! Next try: \n")
+  continue
+  pw = readLine(stdin)
 
-    iterator items*(a: string): char {.inline.} =
-      var i = 0
-      while i < len(a):
-        yield a[i]
-        inc(i)
-    for ch in items("hello world"): # `ch` is an iteration variable
-      echo(ch)
+iterator items*(a: string): char {.inline.} =
+  var i = 0
+  while i < len(a):
+    yield a[i]
+    inc(i)
+for ch in items("hello world"): # `ch` is an iteration variable
+  echo(ch)
 
-    ternary: p(if x > 8: 9 else: 10)
+ternary: p(if x > 8: 9 else: 10)
+```
 
 ### Templates ###
 
-    template declareInNewScope(x: expr, t: typeDesc): stmt =
-      # open a new scope:
-      block:
-        var x: t
-    declareInScope(a, int)
-    a = 42  # works, `a` is known here
+```nim
+template declareInNewScope(x: expr, t: typeDesc): stmt =
+  # open a new scope:
+  block:
+    var x: t
+declareInScope(a, int)
+a = 42  # works, `a` is known here
+```
 
 ## Interop ##
 
-    proc printf(formatstr: cstring) {.importc: "printf", varargs.}
-    proc callme(formatstr: cstring) {.exportc: "callMe", varargs.}
-    proc Tcl_Eval(interp: pTcl_Interp, script: cstring): int {.cdecl,
-      importc, dynlib: "libtcl(|8.5|8.4|8.3).so.(1|0)".}
+```nim
+proc printf(formatstr: cstring) {.importc: "printf", varargs.}
+proc callme(formatstr: cstring) {.exportc: "callMe", varargs.}
+proc Tcl_Eval(interp: pTcl_Interp, script: cstring): int {.cdecl,
+  importc, dynlib: "libtcl(|8.5|8.4|8.3).so.(1|0)".}
+```
 
 When building a library with `--app:lib`:
 
-    proc exportme(): int {.cdecl, export, dynlib.}
+```nim
+proc exportme(): int {.cdecl, export, dynlib.}
+```
 
 ## Compiler ##
 ### Commands ###
@@ -277,4 +293,6 @@ Compile with `--debugger:on`, without `--app:gui`. Commands:
 
 Rebuild argument list with:
 
+```nim
     {:help => [2,4], :advanced => [1,2]}.map { |k, v| `nimrod --#{k}`.split(/^[^\n]*:\n/m).values_at(*v) }.flatten.values_at(0,2,1,3).each_with_index { |v, i| puts [["### Commands ###\n", "", "\n### Arguments ###\n", ""][i],v.rstrip.gsub(/^(?!#)/, "    ")].join("")  } #.gsub(/^( +)(.*?)( *)$/m, "\\1`\\2`\\3")
+```
