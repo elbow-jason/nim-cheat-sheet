@@ -86,18 +86,18 @@ type
 ```nim
 {} # emtpy set
 {'a'..'z', '0'..'9'} # This constructs a set that contains the
-                   # letters from 'a' to 'z' and the digits
-                   # from '0' to '9'
+                     # letters from 'a' to 'z' and the digits
+                     # from '0' to '9'
 
-A + B	union of two sets
-A * B	intersection of two sets
-A - B	difference of two sets (A without B's elements)
-A == B	set equality
-A <= B	subset relation (A is subset of B or equal to B)
-A < B	strong subset relation (A is a real subset of B)
-e in A	set membership (A contains element e)
-A -+- B	symmetric set difference (= (A - B) + (B - A))
-card(A)	the cardinality of A (number of elements in A)
+a + b	# union of two sets
+a * b	# intersection of two sets
+a - b	# difference of two sets (a without b's elements)
+a == b	# set equality
+a <= b	# subset relation (a is subset of b or equal to b)
+a < b	# strong subset relation (a is a real subset of b)
+e in a	# set membership (a contains element e)
+a -+- b	# symmetric set difference (= (a - b) + (b - a))
+card(a)	# the cardinality of a (number of elements in a)
 ```
 #### Pointers ####
 
