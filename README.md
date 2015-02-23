@@ -25,12 +25,16 @@ Built in:
 
 ```nim
 char: 'c' '\l'
-int8 -> int64: 1_024'i8   0xbeef'i16   0o71'i32   0b10'i64
-float32, float64: 1_000.5e-10'f32
+int8: 1_024'i8
+int16: 0xbeef'i16
+int32: 0o71'i32 
+int64: 0b10'i64
+float32: 1_000.5e-10'f64
+float64: 1_000.5e-10'f64
 string: "a\"b", r"a""b", """a"b"""
-        with \n: new line (platform dependant)
-             \l: LF (10)  \r: CR (13)
-        var s: string = newString(4)
+        # with \n: new line (platform dependant)
+        #     \l: LF (10)  \r: CR (13)
+        # var s: string = newString(4)
 ```
 
 #### Declarations ####
